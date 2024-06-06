@@ -1,0 +1,110 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+
+model Crypto {
+  id         String          @id @default(uuid())
+  name       String
+  value      Float
+  image      String
+  created_at DateTime        @default(now())
+  updated_at DateTime        @updatedAt @default(now())
+  UserHasCrypto UserHasCrypto[]
+  Trade      Trade[]
+  Offer Offer[]
+}
+
+
+
+model Offer {
+  id   String @id @default(uuid())
+  id_crypto String
+  id_user String
+  amount Float
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt @default(now())
+
+  Crypto             Crypto @relation(fields: [id_crypto], references: [id])
+  User             User @relation(fields: [id_user], references: [id])
+  Trade      Trade[]
+
+  }
+
+model PromoCode {
+  id   String @id @default(uuid())
+  name String
+  value Int
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt @default(now())
+  
+}
+
+model Role {
+  id   String   @id @default(uuid())
+  name  String
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt @default(now())
+  
+  User       User[]
+}
+
+model Trade {
+  id        String    @id @default(uuid())
+  id_giver         String
+  id_receiver      String
+  id_crypto        String
+  amount_traded    Float
+  id_offer         String 
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt @default(now())
+
+  Offer             Offer @relation(fields: [id_offer], references: [id])
+  Giver            User      @relation("Giver", fields: [id_giver], references: [id])
+  Receiver         User      @relation("Receiver", fields: [id_receiver], references: [id])
+  Crypto           Crypto    @relation(fields: [id_crypto], references: [id])
+}
+
+model User {
+  id               String   @id @default(uuid())
+  firstName        String
+  lastName         String
+  pseudo           String
+  hash             String
+  email            String @unique
+  roleId           String
+  isActive         Boolean
+  city             String
+  dollarAvailables Float
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt @default(now())
+
+  Role             Role     @relation(fields: [roleId], references: [id])
+  UserHasCrypto    UserHasCrypto[]
+  TradeGiven       Trade[]  @relation("Giver")
+  TradeReceived    Trade[]  @relation("Receiver")
+  Offer Offer[]
+}
+
+model UserHasCrypto {
+  id         String          @id @default(uuid())
+  id_user    String
+  id_crypto  String
+  amount     Int
+  createdAt  DateTime        @default(now())
+  updated_at DateTime        @updatedAt @default(now())
+  User       User            @relation(fields: [id_user], references: [id])
+  Crypto     Crypto          @relation(fields: [id_crypto], references: [id])
+  
+}
+
+
+
+
+
