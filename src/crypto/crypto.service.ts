@@ -57,6 +57,7 @@ export class CryptoService {
         name: dto.name,
         image: dto.image,
         value: dto.value,
+        quantity: dto.quantity,
       },
     });
 
@@ -75,7 +76,9 @@ export class CryptoService {
         id: userId,
       },
     });
-
+    if (crypto.quantity < dto.amount) {
+      throw new ForbiddenException('No more tokens available');
+    }
     const necessaryAmount = crypto.value * dto.amount;
     console.log(necessaryAmount, user.dollarAvailables);
 

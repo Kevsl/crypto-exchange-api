@@ -10,6 +10,7 @@ import { CryptoModule } from './crypto/crypto.module';
 import { TradeModule } from './trade/trade.module';
 import { OfferModule } from './offer/offer.module';
 import { UserModule } from './user/user.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -24,6 +25,12 @@ import { UserModule } from './user/user.module';
     TradeModule,
     OfferModule,
     UserModule,
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 40,
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService],

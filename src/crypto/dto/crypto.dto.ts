@@ -18,6 +18,14 @@ export class CryptoDto {
   value: number;
 
   @ApiProperty({
+    type: Number,
+    description: 'Quantity of tokens available on the platform',
+    example: 100,
+  })
+  @IsNumber()
+  quantity: number;
+
+  @ApiProperty({
     type: String,
     description: 'Image for the cryptocurrency in ',
     example: 'https://myImage/com',

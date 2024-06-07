@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Crypto" ADD COLUMN     "quantity" DOUBLE PRECISION NOT NULL DEFAULT 1000;
