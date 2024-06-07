@@ -13,7 +13,6 @@ export class UserController {
 
   @Get('/my-assets')
   GetMyAssets(
-    @Body()
     @GetUser()
     user: User,
   ) {
@@ -21,7 +20,6 @@ export class UserController {
   }
   @Get('/my-trades')
   GetMyTrades(
-    @Body()
     @GetUser()
     user: User,
   ) {
