@@ -33,6 +33,11 @@ export class CryptoController {
     return this.promoService.searchCryptos(user.id, cryptoName);
   }
 
+  @Get('/history/:id')
+  CryptoHistory(@GetUser() user: User, @Param('id') cryptoId: string) {
+    return this.promoService.getCryptoHistory(user.id, cryptoId);
+  }
+
   @HttpCode(HttpStatus.CREATED)
   @Post('/create')
   createPromoCode(

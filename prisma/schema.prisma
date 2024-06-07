@@ -19,8 +19,17 @@ model Crypto {
   UserHasCrypto UserHasCrypto[]
   Trade      Trade[]
   Offer Offer[]
+  CryptoHistory CryptoHistory[]
 }
+model CryptoHistory {
+  id         String          @id @default(uuid())
+  id_crypto String 
+  value      Float
+  created_at DateTime        @default(now())
+  updated_at DateTime        @updatedAt @default(now())
+  Crypto    Crypto @relation(fields: [id_crypto], references: [id])
 
+}
 
 
 model Offer {

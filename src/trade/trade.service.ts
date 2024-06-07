@@ -117,6 +117,12 @@ export class TradeService {
     }
 
     const newValue = crypto.value * 1.1;
+    await this.prisma.cryptoHistory.create({
+      data: {
+        id_crypto: crypto.id,
+        value: newValue,
+      },
+    });
 
     await this.prisma.crypto.update({
       where: {

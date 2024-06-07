@@ -32,6 +32,23 @@ export class CryptoService {
     });
   }
 
+  async getCryptoHistory(userId: string, cryptoId: string) {
+    await checkUserHasAccount(userId);
+
+    if (cryptoId) {
+      return this.prisma.crypto.findMany({
+        where: {
+          id: cryptoId,
+        },
+        orderBy: {
+          created_at: 'desc',
+        },
+      });
+    } else {
+      throw new ForbiddenException('Crypto UUID required');
+    }
+  }
+
   async createCrypto(userId: string, dto: CryptoDto) {
     await checkuserIsAdmin(userId);
 
@@ -103,6 +120,13 @@ export class CryptoService {
       }
     }
     const newCryptoValue = crypto.value * 1.1;
+
+    await this.prisma.cryptoHistory.create({
+      data: {
+        id_crypto: crypto.id,
+        value: newCryptoValue,
+      },
+    });
     return this.prisma.crypto.update({
       where: {
         id: dto.id_crypto,
@@ -111,8 +135,6 @@ export class CryptoService {
         value: newCryptoValue,
       },
     });
-
-    return crypto;
   }
   async editCryptoById(userId: string, cryptoId: string, dto: CryptoDto) {
     await checkuserIsAdmin(userId);
