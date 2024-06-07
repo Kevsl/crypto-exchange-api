@@ -9,6 +9,7 @@ import { PromoCodeModule } from './promoCode/promoCode.module';
 import { CryptoModule } from './crypto/crypto.module';
 import { TradeModule } from './trade/trade.module';
 import { OfferModule } from './offer/offer.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { OfferModule } from './offer/offer.module';
     CryptoModule,
     TradeModule,
     OfferModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
