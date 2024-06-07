@@ -27,6 +27,7 @@ export class AuthService {
         name: 'user',
       },
     });
+
     let balance = 1000;
     if (promoCode && promoCode.value) {
       balance = promoCode.value;
