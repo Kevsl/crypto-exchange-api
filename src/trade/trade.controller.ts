@@ -1,12 +1,9 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
-  Param,
-  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -37,21 +34,5 @@ export class TradeController {
     @GetUser() user: User,
   ) {
     return this.tradeService.createTrade(user.id, dto);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Patch('/update/:id')
-  editPromoCodeById(
-    @Param('id') promoCodeId: string,
-    @Body() dto: TradeDto,
-    @GetUser() user: User,
-  ) {
-    return this.tradeService.editTradeById(user.id, promoCodeId, dto);
-  }
-
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete('/delete/:id')
-  deletePromoCodeById(@Param('id') promoCodeId: string, @GetUser() user: User) {
-    return this.tradeService.deleteTradeById(user.id, promoCodeId);
   }
 }

@@ -145,44 +145,4 @@ export class TradeService {
     });
     return trade;
   }
-
-  async editTradeById(userId: string, tradeId: string, dto: TradeDto) {
-    await checkuserIsAdmin(userId);
-
-    const trade = await this.prisma.trade.findUnique({
-      where: {
-        id: tradeId,
-      },
-    });
-
-    if (!trade || trade.id !== tradeId)
-      throw new ForbiddenException('Access to resources denied');
-
-    return this.prisma.trade.update({
-      where: {
-        id: trade.id,
-      },
-      data: {
-        ...dto,
-      },
-    });
-  }
-  async deleteTradeById(userId: string, id: string) {
-    await checkuserIsAdmin(userId);
-
-    const trade = await this.prisma.trade.findUnique({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!trade || trade.id !== id)
-      throw new ForbiddenException('Access to resources denied');
-
-    await this.prisma.trade.delete({
-      where: {
-        id: trade.id,
-      },
-    });
-  }
 }
