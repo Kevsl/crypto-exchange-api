@@ -13,9 +13,14 @@ export class UserService {
       where: {
         id: userId,
       },
-      include: {
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        dollarAvailables: true,
+        pseudo: true,
         UserHasCrypto: {
-          include: {
+          select: {
             Crypto: true,
           },
         },
