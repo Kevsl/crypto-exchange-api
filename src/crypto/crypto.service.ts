@@ -102,6 +102,15 @@ export class CryptoService {
         });
       }
     }
+    const newCryptoValue = crypto.value * 1.1;
+    await this.prisma.crypto.update({
+      where: {
+        id: dto.id_crypto,
+      },
+      data: {
+        value: newCryptoValue,
+      },
+    });
 
     return crypto;
   }
