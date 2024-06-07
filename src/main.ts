@@ -18,8 +18,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      // eslint-disable-next-line prettier/prettier
-    })
+    }),
   );
 
   await app.listen(process.env.PORT || 3000);

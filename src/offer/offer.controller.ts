@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -36,7 +35,7 @@ export class OfferController {
   createRole(
     @Body()
     dto: OfferDto,
-    @GetUser() user: User
+    @GetUser() user: User,
   ) {
     return this.offerService.createOffer(user.id, dto);
   }
@@ -46,7 +45,7 @@ export class OfferController {
   editOfferById(
     @Param('id') offerId: string,
     @Body() dto: OfferDto,
-    @GetUser() user: User
+    @GetUser() user: User,
   ) {
     return this.offerService.editOfferById(user.id, offerId, dto);
   }

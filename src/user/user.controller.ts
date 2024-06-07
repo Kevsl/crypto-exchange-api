@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Body, Controller, Get, UseGuards } from '@nestjs/common';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
@@ -16,7 +15,7 @@ export class UserController {
   GetMyAssets(
     @Body()
     @GetUser()
-    user: User
+    user: User,
   ) {
     return this.userService.GetMyAssets(user.id);
   }
@@ -24,7 +23,7 @@ export class UserController {
   GetMyTrades(
     @Body()
     @GetUser()
-    user: User
+    user: User,
   ) {
     return this.userService.GetMyTrades(user.id);
   }

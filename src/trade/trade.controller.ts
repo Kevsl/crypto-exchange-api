@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -35,7 +34,7 @@ export class TradeController {
     // @GetUser() user: User,
     @Body()
     dto: TradeDto,
-    @GetUser() user: User
+    @GetUser() user: User,
   ) {
     return this.tradeService.createTrade(user.id, dto);
   }
@@ -45,7 +44,7 @@ export class TradeController {
   editPromoCodeById(
     @Param('id') promoCodeId: string,
     @Body() dto: TradeDto,
-    @GetUser() user: User
+    @GetUser() user: User,
   ) {
     return this.tradeService.editTradeById(user.id, promoCodeId, dto);
   }

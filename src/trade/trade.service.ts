@@ -48,8 +48,7 @@ export class TradeService {
     const price = crypto.value * dto.amount_traded;
     if (buyer.dollarAvailables < price) {
       throw new ForbiddenException(
-        // eslint-disable-next-line prettier/prettier
-        `Acqueror ${buyer.pseudo} doesnt have enough money to make this trade`
+        `Acqueror ${buyer.pseudo} doesnt have enough money to make this trade`,
       );
     }
 
