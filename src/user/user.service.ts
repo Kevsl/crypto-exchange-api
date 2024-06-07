@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { checkUserHasAccount } from 'src/utils/checkUser';
+import { checkUserHasAccount, checkuserIsAdmin } from 'src/utils/checkUser';
 
 @Injectable()
 export class UserService {
@@ -16,6 +16,25 @@ export class UserService {
       include: {
         UserHasCrypto: {
           include: {
+            Crypto: true,
+          },
+        },
+      },
+    });
+    return user;
+  }
+
+  async GetUsersAssets(userId: string) {
+    await checkuserIsAdmin(userId);
+
+    const user = await this.prisma.user.findMany({
+      select: {
+        firstName: true,
+        lastName: true,
+        pseudo: true,
+        dollarAvailables: true,
+        UserHasCrypto: {
+          select: {
             Crypto: true,
           },
         },

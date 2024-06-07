@@ -18,6 +18,14 @@ export class UserController {
   ) {
     return this.userService.GetMyAssets(user.id);
   }
+
+  @Get('/users-assets')
+  GetAlLAssets(
+    @GetUser()
+    user: User,
+  ) {
+    return this.userService.GetUsersAssets(user.id);
+  }
   @Get('/my-trades')
   GetMyTrades(
     @GetUser()
