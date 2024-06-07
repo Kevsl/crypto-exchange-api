@@ -35,17 +35,24 @@ export class TradeService {
   async createTrade(userId: string, dto: TradeDto) {
     await checkUserHasAccount(userId);
 
+    const offer = await this.prisma.offer.findUnique({
+      where: {
+        id: dto.id_offer,
+      },
+    });
     const crypto = await this.prisma.crypto.findFirst({
       where: {
-        id: dto.id_crypto,
+        id: offer.id_crypto,
       },
     });
+
     const buyer = await this.prisma.user.findFirst({
       where: {
-        id: dto.id_receiver,
+        id: offer.id_user,
       },
     });
-    const price = crypto.value * dto.amount_traded;
+
+    const price = crypto.value * offer.amount;
     if (buyer.dollarAvailables < price) {
       throw new ForbiddenException(
         `Acqueror ${buyer.pseudo} doesnt have enough money to make this trade`,
@@ -54,26 +61,26 @@ export class TradeService {
 
     const asset = await this.prisma.userHasCrypto.findFirst({
       where: {
-        id_crypto: dto.id_crypto,
-        id_user: dto.id_giver,
+        id_crypto: offer.id_crypto,
+        id_user: offer.id_user,
       },
     });
 
-    if (!asset || asset.amount < dto.amount_traded) {
+    if (!asset || asset.amount < offer.amount) {
       throw new ForbiddenException(`Seller doesnt have enough ${crypto.name} `);
     }
 
     const trade = await this.prisma.trade.create({
       data: {
-        id_giver: dto.id_giver,
-        id_receiver: dto.id_receiver,
-        id_crypto: dto.id_crypto,
-        amount_traded: dto.amount_traded,
-        id_offer: dto.id_offer,
+        id_giver: offer.id_user,
+        id_receiver: userId,
+        id_crypto: offer.id_crypto,
+        amount_traded: offer.amount,
+        id_offer: offer.id,
       },
     });
 
-    const newBalanceGiver = (asset.amount -= dto.amount_traded);
+    const newBalanceGiver = (asset.amount -= offer.amount);
     await this.prisma.userHasCrypto.update({
       where: {
         id: asset.id,
@@ -85,21 +92,21 @@ export class TradeService {
 
     const receiverAssets = await this.prisma.userHasCrypto.findFirst({
       where: {
-        id_user: dto.id_receiver,
-        id_crypto: dto.id_crypto,
+        id_user: userId,
+        id_crypto: offer.id_crypto,
       },
     });
     if (!receiverAssets) {
       await this.prisma.userHasCrypto.create({
         data: {
-          id_user: dto.id_receiver,
-          id_crypto: dto.id_crypto,
-          amount: dto.amount_traded,
+          id_user: userId,
+          id_crypto: offer.id_crypto,
+          amount: offer.amount,
           createdAt: new Date(),
         },
       });
     } else {
-      const newBalanceReceiver = receiverAssets.amount + dto.amount_traded;
+      const newBalanceReceiver = receiverAssets.amount + offer.amount;
       await this.prisma.userHasCrypto.update({
         where: {
           id: receiverAssets.id,
@@ -125,10 +132,15 @@ export class TradeService {
 
     await this.prisma.user.update({
       where: {
-        id: dto.id_receiver,
+        id: userId,
       },
       data: {
         dollarAvailables: prevAmount - price,
+      },
+    });
+    await this.prisma.offer.delete({
+      where: {
+        id: offer.id,
       },
     });
     return trade;

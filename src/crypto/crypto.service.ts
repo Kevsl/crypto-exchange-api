@@ -103,7 +103,7 @@ export class CryptoService {
       }
     }
     const newCryptoValue = crypto.value * 1.1;
-    await this.prisma.crypto.update({
+    return this.prisma.crypto.update({
       where: {
         id: dto.id_crypto,
       },
