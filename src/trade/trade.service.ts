@@ -76,7 +76,6 @@ export class TradeService {
         id_receiver: userId,
         id_crypto: offer.id_crypto,
         amount_traded: offer.amount,
-        id_offer: offer.id,
       },
     });
 

@@ -33,7 +33,6 @@ model Offer {
 
   Crypto             Crypto @relation(fields: [id_crypto], references: [id])
   User             User @relation(fields: [id_user], references: [id])
-  Trade      Trade[]
 
   }
 
@@ -61,11 +60,9 @@ model Trade {
   id_receiver      String
   id_crypto        String
   amount_traded    Float
-  id_offer         String 
   created_at       DateTime  @default(now())
   updated_at       DateTime  @updatedAt @default(now())
 
-  Offer             Offer @relation(fields: [id_offer], references: [id])
   Giver            User      @relation("Giver", fields: [id_giver], references: [id])
   Receiver         User      @relation("Receiver", fields: [id_receiver], references: [id])
   Crypto           Crypto    @relation(fields: [id_crypto], references: [id])
