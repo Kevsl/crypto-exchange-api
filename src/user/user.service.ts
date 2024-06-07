@@ -14,7 +14,11 @@ export class UserService {
         id: userId,
       },
       include: {
-        UserHasCrypto: true,
+        UserHasCrypto: {
+          include: {
+            Crypto: true,
+          },
+        },
       },
     });
     return user;
