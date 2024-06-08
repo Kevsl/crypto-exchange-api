@@ -28,8 +28,8 @@ export class CryptoController {
   getAllPromoCodes(@GetUser() user: User) {
     return this.promoService.getCryptos(user.id);
   }
-  @Get('/search/:id')
-  searchCrypto(@GetUser() user: User, @Param('id') cryptoName: string) {
+  @Get('/search/:name')
+  searchCrypto(@GetUser() user: User, @Param('name') cryptoName: string) {
     return this.promoService.searchCryptos(user.id, cryptoName);
   }
 
