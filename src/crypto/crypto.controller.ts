@@ -55,20 +55,4 @@ export class CryptoController {
   ) {
     return this.promoService.buyCrypto(user.id, dto);
   }
-
-  @HttpCode(HttpStatus.OK)
-  @Patch('/update/:id')
-  editPromoCodeById(
-    @Param('id') cryptoId: string,
-    @Body() dto: CryptoDto,
-    @GetUser() user: User,
-  ) {
-    return this.promoService.editCryptoById(user.id, cryptoId, dto);
-  }
-
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete('/delete/:id')
-  deletePromoCodeById(@Param('id') cryptoId: string, @GetUser() user: User) {
-    return this.promoService.deleteCryptoById(user.id, cryptoId);
-  }
 }
