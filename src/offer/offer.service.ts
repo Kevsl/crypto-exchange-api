@@ -55,7 +55,7 @@ export class OfferService {
     if (!offer || offer.id !== offerId)
       throw new ForbiddenException('Offer id mandatory');
 
-    return this.prisma.role.update({
+    return this.prisma.offer.update({
       where: {
         id: offerId,
       },
