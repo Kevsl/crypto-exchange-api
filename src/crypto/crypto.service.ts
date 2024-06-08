@@ -130,7 +130,7 @@ export class CryptoService {
         value: newCryptoValue,
       },
     });
-    const newQuantity = (crypto.quantity -= 1);
+    const newQuantity = (crypto.quantity -= dto.amount);
     return this.prisma.crypto.update({
       where: {
         id: dto.id_crypto,
