@@ -2,7 +2,6 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { checkUserHasAccount, checkuserIsAdmin } from 'src/utils/checkUser';
 import { OfferDto } from './dto';
-// import { checkRoleLevel, checkUserIsStaff } from 'src/utils/checkUser';
 @Injectable()
 export class OfferService {
   constructor(private prisma: PrismaService) {}

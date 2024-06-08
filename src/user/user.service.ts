@@ -14,7 +14,6 @@ export class UserService {
         id: userId,
       },
       select: {
-        id: true,
         firstName: true,
         lastName: true,
         dollarAvailables: true,
