@@ -43,8 +43,17 @@ export class OfferService {
       },
     });
 
+    const crypto = await this.prisma.crypto.findUnique({
+      where: {
+        id: dto.id_crypto,
+      },
+    });
+    if (!crypto || !crypto.id) {
+      throw new ForbiddenException('Crypto doesnt exist');
+    }
+
     if (!offer || offer.id !== offerId)
-      throw new ForbiddenException('Access to resources denied');
+      throw new ForbiddenException('Offer id mandatory');
 
     return this.prisma.role.update({
       where: {

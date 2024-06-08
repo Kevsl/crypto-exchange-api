@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsPositive, IsString } from 'class-validator';
 export class OfferDto {
   @ApiProperty({
     type: String,
@@ -16,5 +16,6 @@ export class OfferDto {
     example: 21,
   })
   @IsNumber()
+  @IsPositive()
   amount: number;
 }
