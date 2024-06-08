@@ -13,9 +13,28 @@ export class TradeService {
       orderBy: {
         created_at: 'desc',
       },
-      include: {
-        Giver: true,
-        Receiver: true,
+      // include: {
+      //   Giver: true,
+      //   Receiver: true,
+      //   Crypto: true,
+      // },
+
+      select: {
+        Giver: {
+          select: {
+            firstName: true,
+            lastName: true,
+            pseudo: true,
+          },
+        },
+        Receiver: {
+          select: {
+            firstName: true,
+            lastName: true,
+            pseudo: true,
+            dollarAvailables: true,
+          },
+        },
         Crypto: true,
       },
     });

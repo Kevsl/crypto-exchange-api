@@ -40,9 +40,11 @@ export class CryptoService {
         where: {
           id: cryptoId,
         },
+
         orderBy: {
           created_at: 'desc',
         },
+        take: 50,
       });
     } else {
       throw new ForbiddenException('Crypto UUID required');
