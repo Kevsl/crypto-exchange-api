@@ -30,7 +30,7 @@ export class AuthService {
 
     let balance = 1000;
     if (promoCode && promoCode.value) {
-      balance = promoCode.value;
+      balance += promoCode.value;
     }
     try {
       const user = await this.prisma.user.create({
