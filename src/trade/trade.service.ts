@@ -25,6 +25,7 @@ export class TradeService {
             firstName: true,
             lastName: true,
             pseudo: true,
+            dollarAvailables: true,
           },
         },
         Receiver: {
