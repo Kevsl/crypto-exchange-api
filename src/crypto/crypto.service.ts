@@ -54,6 +54,14 @@ export class CryptoService {
   async createCrypto(userId: string, dto: CryptoDto) {
     await checkuserIsAdmin(userId);
 
+    const existingCryptosWithSameName = await this.prisma.crypto.findMany({
+      where: {
+        name: dto.name,
+      },
+    });
+    if (existingCryptosWithSameName.length > 0) {
+      throw new ForbiddenException('Name already taken');
+    }
     const crypto = await this.prisma.crypto.create({
       data: {
         name: dto.name,

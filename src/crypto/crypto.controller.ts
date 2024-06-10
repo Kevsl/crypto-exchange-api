@@ -22,20 +22,20 @@ import { BuyCryptoDto } from './dto/buy.crypto.dto';
 @ApiTags('crypto')
 @Controller('crypto')
 export class CryptoController {
-  constructor(private promoService: CryptoService) {}
+  constructor(private cryptoService: CryptoService) {}
 
   @Get('/all')
   getAllPromoCodes(@GetUser() user: User) {
-    return this.promoService.getCryptos(user.id);
+    return this.cryptoService.getCryptos(user.id);
   }
   @Get('/search/:name')
   searchCrypto(@GetUser() user: User, @Param('name') cryptoName: string) {
-    return this.promoService.searchCryptos(user.id, cryptoName);
+    return this.cryptoService.searchCryptos(user.id, cryptoName);
   }
 
   @Get('/history/:id')
   CryptoHistory(@GetUser() user: User, @Param('id') cryptoId: string) {
-    return this.promoService.getCryptoHistory(user.id, cryptoId);
+    return this.cryptoService.getCryptoHistory(user.id, cryptoId);
   }
 
   @HttpCode(HttpStatus.CREATED)
@@ -45,7 +45,7 @@ export class CryptoController {
     dto: CryptoDto,
     @GetUser() user: User,
   ) {
-    return this.promoService.createCrypto(user.id, dto);
+    return this.cryptoService.createCrypto(user.id, dto);
   }
   @Post('/buy')
   buyCrypto(
@@ -53,6 +53,21 @@ export class CryptoController {
     dto: BuyCryptoDto,
     @GetUser() user: User,
   ) {
-    return this.promoService.buyCrypto(user.id, dto);
+    return this.cryptoService.buyCrypto(user.id, dto);
+  }
+  @HttpCode(HttpStatus.OK)
+  @Patch('/update/:id')
+  editCryptoById(
+    @Param('id') cryptoId: string,
+    @Body() dto: CryptoDto,
+    @GetUser() user: User,
+  ) {
+    return this.cryptoService.editCryptoById(user.id, cryptoId, dto);
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete('/delete/:id')
+  deleteOfferById(@Param('id') roleId: string, @GetUser() user: User) {
+    return this.cryptoService.deleteCryptoById(user.id, roleId);
   }
 }
