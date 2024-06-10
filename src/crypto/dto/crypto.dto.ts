@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, IsUrl } from 'class-validator';
 export class CryptoDto {
   @ApiProperty({
     type: String,
@@ -30,6 +30,7 @@ export class CryptoDto {
     description: 'Image for the cryptocurrency in ',
     example: 'https://myImage/com',
   })
+  @IsUrl()
   @IsString()
   image: string;
 }
