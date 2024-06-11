@@ -40,10 +40,11 @@ export class UserService {
         UserHasCrypto: {
           select: {
             Crypto: true,
+            amount: true,
           },
         },
       },
-      take: 50,
+      take: 20,
     });
     return user;
   }
