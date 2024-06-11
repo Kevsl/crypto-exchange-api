@@ -1,10 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
+  Max,
   MaxLength,
+  Min,
   MinLength,
 } from 'class-validator';
 export class AuthRegisterDto {
@@ -78,4 +81,14 @@ export class AuthRegisterDto {
   })
   @IsOptional()
   promoCode: string;
+
+  @ApiProperty({
+    type: Number,
+    description: 'age',
+    example: 20,
+  })
+  @IsInt()
+  @Min(0)
+  @Max(120)
+  age: number;
 }

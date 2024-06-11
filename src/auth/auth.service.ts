@@ -41,6 +41,7 @@ export class AuthService {
           city: dto.city,
           email: dto.email,
           hash,
+          age: dto.age,
           roleId: userRole.id,
           isActive: true,
           dollarAvailables: balance,

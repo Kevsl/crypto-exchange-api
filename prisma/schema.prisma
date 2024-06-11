@@ -89,6 +89,7 @@ model User {
   isActive         Boolean
   city             String
   dollarAvailables Float
+  age              Int @default(20)
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt @default(now())
 
