@@ -36,9 +36,9 @@ export class CryptoService {
     await checkUserHasAccount(userId);
 
     if (cryptoId) {
-      return this.prisma.crypto.findMany({
+      return this.prisma.cryptoHistory.findMany({
         where: {
-          id: cryptoId,
+          id_crypto: cryptoId,
         },
 
         orderBy: {
