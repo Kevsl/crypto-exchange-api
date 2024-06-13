@@ -32,7 +32,7 @@ export class OfferService {
 
     const userAssets = await this.prisma.userHasCrypto.findFirst({
       where: {
-        id: userId,
+        id_user: userId,
         Crypto: {
           id: dto.id_crypto,
         },
