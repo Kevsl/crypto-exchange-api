@@ -29,6 +29,19 @@ export class OfferService {
 
   async createOffer(userId: string, dto: OfferDto) {
     await checkUserHasAccount(userId);
+
+    const userAssets = await this.prisma.userHasCrypto.findFirst({
+      where: {
+        id: userId,
+        Crypto: {
+          id: dto.id_crypto,
+        },
+      },
+    });
+    if (userAssets.amount < dto.amount) {
+      throw new ForbiddenException('Insuficient tokens avaiblable');
+    }
+
     const offer = await this.prisma.offer.create({
       data: {
         id_crypto: dto.id_crypto,

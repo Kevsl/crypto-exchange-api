@@ -2,7 +2,6 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { checkUserHasAccount, checkuserIsAdmin } from 'src/utils/checkUser';
 import { TradeDto } from './dto';
-import { of } from 'rxjs';
 @Injectable()
 export class TradeService {
   constructor(private prisma: PrismaService) {}
