@@ -88,7 +88,7 @@ export class AuthRegisterDto {
     example: 20,
   })
   @IsInt()
-  @Min(0)
+  @Min(18)
   @Max(120)
   age: number;
 }

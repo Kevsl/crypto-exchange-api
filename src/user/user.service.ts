@@ -18,6 +18,7 @@ export class UserService {
         lastName: true,
         dollarAvailables: true,
         pseudo: true,
+        age: true,
         UserHasCrypto: {
           select: {
             Crypto: true,
