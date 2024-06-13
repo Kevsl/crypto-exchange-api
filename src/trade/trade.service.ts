@@ -60,6 +60,7 @@ export class TradeService {
         id: dto.id_offer,
       },
     });
+
     const crypto = await this.prisma.crypto.findFirst({
       where: {
         id: offer.id_crypto,
@@ -68,7 +69,7 @@ export class TradeService {
 
     const buyer = await this.prisma.user.findFirst({
       where: {
-        id: offer.id_user,
+        id: userId,
       },
     });
 
