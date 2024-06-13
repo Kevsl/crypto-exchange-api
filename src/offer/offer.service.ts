@@ -13,6 +13,12 @@ export class OfferService {
         created_at: 'desc',
       },
       select: {
+        id: true,
+        User: {
+          select: {
+            pseudo: true,
+          },
+        },
         amount: true,
         created_at: true,
         id_user: true,
