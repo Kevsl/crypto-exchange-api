@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { checkUserHasAccount, checkuserIsAdmin } from 'src/utils/checkUser';
 import { TradeDto } from './dto';
+import { of } from 'rxjs';
 @Injectable()
 export class TradeService {
   constructor(private prisma: PrismaService) {}
@@ -70,6 +71,12 @@ export class TradeService {
     const buyer = await this.prisma.user.findFirst({
       where: {
         id: userId,
+      },
+    });
+
+    const seller = await this.prisma.user.findFirst({
+      where: {
+        id: offer.id_user,
       },
     });
 
@@ -164,6 +171,18 @@ export class TradeService {
         dollarAvailables: prevAmount - price,
       },
     });
+
+    const newBalanceSeller = seller.dollarAvailables + price;
+
+    await this.prisma.user.update({
+      where: {
+        id: seller.id,
+      },
+      data: {
+        dollarAvailables: newBalanceSeller,
+      },
+    });
+
     await this.prisma.offer.delete({
       where: {
         id: offer.id,
