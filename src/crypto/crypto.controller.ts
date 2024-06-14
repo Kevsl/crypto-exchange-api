@@ -38,6 +38,15 @@ export class CryptoController {
     return this.cryptoService.getCryptoHistory(user.id, cryptoId);
   }
 
+  @Post('/sell')
+  SellCrypto(
+    @Body()
+    dto: BuyCryptoDto,
+    @GetUser() user: User,
+  ) {
+    return this.cryptoService.sellCryto(user.id, dto);
+  }
+
   @HttpCode(HttpStatus.CREATED)
   @Post('/create')
   createPromoCode(
