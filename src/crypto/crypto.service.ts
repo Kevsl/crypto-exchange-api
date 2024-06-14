@@ -74,6 +74,7 @@ export class CryptoService {
         id_crypto: dto.id_crypto,
       },
     });
+    const newCryptoValue = crypto.value * 0.9;
     if (!userAsset || userAsset.amount < dto.amount) {
       throw new ForbiddenException(`Seller dont have enough asset`);
     } else {
@@ -82,7 +83,7 @@ export class CryptoService {
           id: crypto.id,
         },
         data: {
-          value: crypto.value * 0.9,
+          value: newCryptoValue,
         },
       });
 
@@ -95,6 +96,12 @@ export class CryptoService {
         },
         data: {
           dollarAvailables: newBalanceSeller,
+        },
+      });
+      await this.prisma.cryptoHistory.create({
+        data: {
+          id_crypto: crypto.id,
+          value: newCryptoValue,
         },
       });
       const newBalance = userAsset.amount - dto.amount;
