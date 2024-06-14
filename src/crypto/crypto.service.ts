@@ -73,6 +73,15 @@ export class CryptoService {
     if (!userAsset || userAsset.amount < dto.amount) {
       throw new ForbiddenException(`Seller dont have enough asset`);
     } else {
+      await this.prisma.crypto.update({
+        where: {
+          id: crypto.id,
+        },
+        data: {
+          value: crypto.value * 0.9,
+        },
+      });
+
       const newBalance = userAsset.amount - dto.amount;
       if (newBalance > 0) {
         await this.prisma.userHasCrypto.update({
