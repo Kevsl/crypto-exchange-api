@@ -84,7 +84,7 @@ export class CryptoService {
 
       const newBalance = userAsset.amount - dto.amount;
       if (newBalance > 0) {
-        await this.prisma.userHasCrypto.update({
+        return this.prisma.userHasCrypto.update({
           where: {
             id: userAsset.id,
           },
@@ -93,7 +93,7 @@ export class CryptoService {
           },
         });
       } else {
-        await this.prisma.userHasCrypto.delete({
+        return this.prisma.userHasCrypto.delete({
           where: {
             id: userAsset.id,
           },
