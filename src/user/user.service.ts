@@ -23,6 +23,7 @@ export class UserService {
           select: {
             Crypto: true,
             amount: true,
+            id: true,
           },
         },
       },
@@ -62,6 +63,8 @@ export class UserService {
       },
       include: {
         Crypto: true,
+        Giver: true,
+        Receiver: true,
       },
     });
     return user;
