@@ -51,6 +51,48 @@ export class CryptoService {
     }
   }
 
+  async sellCryto(userId: string, dto: BuyCryptoDto) {
+    await checkUserHasAccount(userId);
+
+    const crypto = await this.prisma.crypto.findFirst({
+      where: {
+        id: dto.id_crypto,
+      },
+    });
+
+    if (!crypto || !crypto.id) {
+      throw new ForbiddenException('Crypto doesnt exist');
+    }
+
+    const userAsset = await this.prisma.userHasCrypto.findFirst({
+      where: {
+        id_user: userId,
+        id_crypto: dto.id_crypto,
+      },
+    });
+    if (!userAsset || userAsset.amount < dto.amount) {
+      throw new ForbiddenException(`Seller dont have enough asset`);
+    } else {
+      const newBalance = userAsset.amount - dto.amount;
+      if (newBalance > 0) {
+        await this.prisma.userHasCrypto.update({
+          where: {
+            id: userAsset.id,
+          },
+          data: {
+            amount: newBalance,
+          },
+        });
+      } else {
+        await this.prisma.userHasCrypto.delete({
+          where: {
+            id: userAsset.id,
+          },
+        });
+      }
+    }
+  }
+
   async createCrypto(userId: string, dto: CryptoDto) {
     await checkuserIsAdmin(userId);
 
@@ -151,6 +193,7 @@ export class CryptoService {
       },
     });
   }
+
   async editCryptoById(userId: string, cryptoId: string, dto: CryptoDto) {
     await checkuserIsAdmin(userId);
 
