@@ -1,8 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 async function main() {
-  const prisma = new PrismaClient();
-
   await this.prisma.role.create({
     name: 'user',
   });
