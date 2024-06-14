@@ -37,6 +37,7 @@ export class TradeService {
           },
         },
         Crypto: true,
+        id: true,
       },
     });
   }
