@@ -105,6 +105,14 @@ export class CryptoService {
         },
       });
       const newBalance = userAsset.amount - dto.amount;
+      await this.prisma.crypto.update({
+        where: {
+          id: dto.id_crypto,
+        },
+        data: {
+          quantity: crypto.quantity + dto.amount,
+        },
+      });
       if (newBalance > 0) {
         return this.prisma.userHasCrypto.update({
           where: {
