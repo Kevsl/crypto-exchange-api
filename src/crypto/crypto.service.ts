@@ -60,6 +60,10 @@ export class CryptoService {
       },
     });
 
+    const user = await this.prisma.user.findFirst({
+      where: { id: userId },
+    });
+
     if (!crypto || !crypto.id) {
       throw new ForbiddenException('Crypto doesnt exist');
     }
@@ -82,6 +86,17 @@ export class CryptoService {
         },
       });
 
+      const price = crypto.value * dto.amount;
+      const newBalanceSeller = user.dollarAvailables + price;
+
+      await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          dollarAvailables: newBalanceSeller,
+        },
+      });
       const newBalance = userAsset.amount - dto.amount;
       if (newBalance > 0) {
         return this.prisma.userHasCrypto.update({
