@@ -1,7 +1,8 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthLoginDto, AuthRegisterDto } from './dto';
-import * as argon from 'argon2';
+import bcrypt from 'bcryptjs';
+
 import { Prisma, User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -15,7 +16,7 @@ export class AuthService {
   ) {}
 
   async signup(dto: AuthRegisterDto) {
-    const hash = await argon.hash(dto.password);
+    const hash = await bcrypt.hashSync(dto.password);
     const promoCode = await this.prisma.promoCode.findFirst({
       where: {
         name: dto.promoCode,
@@ -73,7 +74,8 @@ export class AuthService {
     });
     if (!userDatas) throw new ForbiddenException('Credentials incorrect');
 
-    const pwMatches = await argon.verify(userDatas.hash, dto.password);
+    const pwMatches = await bcrypt.compareSync(userDatas.hash, dto.password);
+
     if (!pwMatches) throw new ForbiddenException('Credentials incorrect');
 
     return this.signToken(userDatas);
