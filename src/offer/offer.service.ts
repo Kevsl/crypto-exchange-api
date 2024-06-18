@@ -42,6 +42,20 @@ export class OfferService {
       throw new ForbiddenException('Insuficient tokens avaiblable');
     }
 
+    const currentUserOffers = await this.prisma.offer.findMany({
+      where: {
+        id_user: userId,
+        id_crypto: dto.id_crypto,
+      },
+    });
+    let totalAmountsInOffers = 0;
+    currentUserOffers.forEach((offer) => {
+      totalAmountsInOffers += offer.amount;
+    });
+    if (totalAmountsInOffers > userAssets.amount) {
+      throw new ForbiddenException('Insuficient tokens avaiblable');
+    }
+
     const offer = await this.prisma.offer.create({
       data: {
         id_crypto: dto.id_crypto,
