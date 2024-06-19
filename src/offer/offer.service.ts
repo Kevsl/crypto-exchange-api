@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  ImATeapotException,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { checkUserHasAccount, checkuserIsAdmin } from 'src/utils/checkUser';
 import { OfferDto } from './dto';
@@ -38,6 +42,11 @@ export class OfferService {
         },
       },
     });
+
+    if (!userAssets) {
+      throw new ForbiddenException('No tokens available');
+    }
+
     if (userAssets.amount < dto.amount) {
       throw new ForbiddenException('Insuficient tokens avaiblable');
     }
@@ -52,9 +61,10 @@ export class OfferService {
     currentUserOffers.forEach((offer) => {
       totalAmountsInOffers += offer.amount;
     });
+    console.log(totalAmountsInOffers);
 
-    if (totalAmountsInOffers > userAssets.amount) {
-      throw new ForbiddenException('Insuficient tokens avaiblable');
+    if (totalAmountsInOffers >= userAssets.amount) {
+      throw new ImATeapotException('Insuficient tokens avaiblable');
     }
 
     const offer = await this.prisma.offer.create({
