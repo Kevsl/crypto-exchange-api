@@ -29,10 +29,6 @@ export class OfferController {
   getAllOffers(@GetUser() user: User) {
     return this.offerService.getOffers(user.id);
   }
-  @Get('/crypto/:id')
-  searchOfferByCryptoId(@GetUser() user: User, @Param('id') cryptoId: string) {
-    return this.offerService.getOffersByCryptoId(user.id, cryptoId);
-  }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('/create')
