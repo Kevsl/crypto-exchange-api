@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  ImATeapotException,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { checkUserHasAccount, checkuserIsAdmin } from 'src/utils/checkUser';
 import { TradeDto } from './dto';
@@ -79,6 +83,10 @@ export class TradeService {
         id: offer.id_user,
       },
     });
+
+    if (seller.id === buyer.id) {
+      throw new ImATeapotException('Get the fuck outta here');
+    }
 
     const price = crypto.value * offer.amount;
     if (buyer.dollarAvailables < price) {
