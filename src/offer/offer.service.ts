@@ -52,6 +52,7 @@ export class OfferService {
     currentUserOffers.forEach((offer) => {
       totalAmountsInOffers += offer.amount;
     });
+
     if (totalAmountsInOffers > userAssets.amount) {
       throw new ForbiddenException('Insuficient tokens avaiblable');
     }
