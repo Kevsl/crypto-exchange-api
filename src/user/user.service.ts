@@ -61,10 +61,48 @@ export class UserService {
       where: {
         OR: [{ id_giver: userId }, { id_receiver: userId }],
       },
-      include: {
+
+      select: {
+        Giver: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            pseudo: true,
+            dollarAvailables: true,
+            city: true,
+            email: true,
+            age: true,
+            created_at: true,
+            updated_at: true,
+            UserHasCrypto: true,
+            Offer: true,
+          },
+        },
+        Receiver: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            pseudo: true,
+            dollarAvailables: true,
+            city: true,
+            email: true,
+            age: true,
+            created_at: true,
+            updated_at: true,
+            UserHasCrypto: true,
+            Offer: true,
+          },
+        },
         Crypto: true,
-        Giver: true,
-        Receiver: true,
+        id: true,
+        id_giver: true,
+        id_receiver: true,
+        id_crypto: true,
+        amount_traded: true,
+        created_at: true,
+        updated_at: true,
       },
     });
     return user;
