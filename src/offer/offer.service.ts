@@ -31,6 +31,30 @@ export class OfferService {
     });
   }
 
+  async getOffersByCrypto(userId: string, cryptoId: string) {
+    await checkUserHasAccount(userId);
+    return this.prisma.offer.findMany({
+      where: {
+        id_crypto: cryptoId,
+      },
+      orderBy: {
+        amount: 'desc',
+      },
+      select: {
+        id: true,
+        User: {
+          select: {
+            pseudo: true,
+          },
+        },
+        amount: true,
+        created_at: true,
+        id_user: true,
+        Crypto: true,
+      },
+    });
+  }
+
   async createOffer(userId: string, dto: OfferDto) {
     await checkUserHasAccount(userId);
 
