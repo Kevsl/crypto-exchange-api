@@ -3,16 +3,53 @@ on:
     branches:
       - main
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
 jobs:
-  sonarcloud:
-    name: SonarCloud
+  # Nous appelons cette liste de tâches backend-test, car le sujet de cette ci est de réaliser des tests avant l'intégration sur main
+  backend-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      # Nous allons utiliser l'action checkout qui récupère le code source depuis GitHub .
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Nous utilisons ensuite l'action setup-node@v4 avec la bonne version
+      # et npm.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.17.0'
+
+      #  Installation des dépendances avec npm install
+      - name: Install dependencies
+        run: npm install
+
+      #  Execution des tests unitaires avec npm run test
+      - name: Run tests
+        run: npm run test
+    services:
+      postgres:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+          POSTGRES_DB: testdb
+
+    sonarqube:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@<action version>
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
