@@ -47,10 +47,10 @@ export class UserService {
           },
         },
       },
-      take: 50,
       orderBy: {
         dollarAvailables: 'desc',
       },
+      take: 20,
     });
     return user;
   }
