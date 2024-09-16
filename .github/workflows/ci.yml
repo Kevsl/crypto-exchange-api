@@ -20,12 +20,13 @@ jobs:
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
+          distribution: 'temurin' # Distribution de Java (par ex: 'temurin')
           java-version: '17'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run SonarQube scanner
+      - name: Run SonarQube scan
         run: |
           npx sonar-scanner \
             -Dsonar.projectKey=your_project_key \
