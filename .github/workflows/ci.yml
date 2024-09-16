@@ -42,9 +42,9 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
           POSTGRES_DB: testdb
 
-    sonarqube:
-    runs-on: ubuntu-latest
-    steps:
+  sonarqube:
+  runs-on: ubuntu-latest
+  steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
