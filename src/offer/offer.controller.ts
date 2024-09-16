@@ -26,8 +26,12 @@ export class OfferController {
   constructor(private offerService: OfferService) {}
 
   @Get('/all')
-  getAllRoles(@GetUser() user: User) {
+  getAllOffers(@GetUser() user: User) {
     return this.offerService.getOffers(user.id);
+  }
+  @Get('/crypto/:id')
+  getOffersByCryptoId(@GetUser() user: User, @Param('id') cryptoId: string) {
+    return this.offerService.getOffersByCrypto(user.id, cryptoId);
   }
 
   @HttpCode(HttpStatus.CREATED)

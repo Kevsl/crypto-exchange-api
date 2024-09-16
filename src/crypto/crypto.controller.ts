@@ -1,12 +1,12 @@
 import {
   Body,
   Controller,
-  Delete,
+  // Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
-  Patch,
+  // Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -38,6 +38,15 @@ export class CryptoController {
     return this.cryptoService.getCryptoHistory(user.id, cryptoId);
   }
 
+  @Post('/sell')
+  SellCrypto(
+    @Body()
+    dto: BuyCryptoDto,
+    @GetUser() user: User,
+  ) {
+    return this.cryptoService.sellCryto(user.id, dto);
+  }
+
   @HttpCode(HttpStatus.CREATED)
   @Post('/create')
   createPromoCode(
@@ -55,19 +64,19 @@ export class CryptoController {
   ) {
     return this.cryptoService.buyCrypto(user.id, dto);
   }
-  @HttpCode(HttpStatus.OK)
-  @Patch('/update/:id')
-  editCryptoById(
-    @Param('id') cryptoId: string,
-    @Body() dto: CryptoDto,
-    @GetUser() user: User,
-  ) {
-    return this.cryptoService.editCryptoById(user.id, cryptoId, dto);
-  }
+  // @HttpCode(HttpStatus.OK)
+  // @Patch('/update/:id')
+  // editCryptoById(
+  //   @Param('id') cryptoId: string,
+  //   @Body() dto: CryptoDto,
+  //   @GetUser() user: User,
+  // ) {
+  //   return this.cryptoService.editCryptoById(user.id, cryptoId, dto);
+  // }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete('/delete/:id')
-  deleteOfferById(@Param('id') roleId: string, @GetUser() user: User) {
-    return this.cryptoService.deleteCryptoById(user.id, roleId);
-  }
+  // @HttpCode(HttpStatus.NO_CONTENT)
+  // @Delete('/delete/:id')
+  // deleteOfferById(@Param('id') roleId: string, @GetUser() user: User) {
+  //   return this.cryptoService.deleteCryptoById(user.id, roleId);
+  // }
 }

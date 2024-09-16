@@ -18,9 +18,12 @@ export class UserService {
         lastName: true,
         dollarAvailables: true,
         pseudo: true,
+        age: true,
         UserHasCrypto: {
           select: {
             Crypto: true,
+            amount: true,
+            id: true,
           },
         },
       },
@@ -44,6 +47,9 @@ export class UserService {
           },
         },
       },
+      orderBy: {
+        dollarAvailables: 'desc',
+      },
       take: 20,
     });
     return user;
@@ -55,8 +61,48 @@ export class UserService {
       where: {
         OR: [{ id_giver: userId }, { id_receiver: userId }],
       },
-      include: {
+
+      select: {
+        Giver: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            pseudo: true,
+            dollarAvailables: true,
+            city: true,
+            email: true,
+            age: true,
+            created_at: true,
+            updated_at: true,
+            UserHasCrypto: true,
+            Offer: true,
+          },
+        },
+        Receiver: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            pseudo: true,
+            dollarAvailables: true,
+            city: true,
+            email: true,
+            age: true,
+            created_at: true,
+            updated_at: true,
+            UserHasCrypto: true,
+            Offer: true,
+          },
+        },
         Crypto: true,
+        id: true,
+        id_giver: true,
+        id_receiver: true,
+        id_crypto: true,
+        amount_traded: true,
+        created_at: true,
+        updated_at: true,
       },
     });
     return user;

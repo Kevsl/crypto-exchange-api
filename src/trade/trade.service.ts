@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  ImATeapotException,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { checkUserHasAccount, checkuserIsAdmin } from 'src/utils/checkUser';
 import { TradeDto } from './dto';
@@ -37,6 +41,7 @@ export class TradeService {
           },
         },
         Crypto: true,
+        id: true,
       },
     });
   }
@@ -60,6 +65,7 @@ export class TradeService {
         id: dto.id_offer,
       },
     });
+
     const crypto = await this.prisma.crypto.findFirst({
       where: {
         id: offer.id_crypto,
@@ -68,9 +74,19 @@ export class TradeService {
 
     const buyer = await this.prisma.user.findFirst({
       where: {
+        id: userId,
+      },
+    });
+
+    const seller = await this.prisma.user.findFirst({
+      where: {
         id: offer.id_user,
       },
     });
+
+    if (seller.id === buyer.id) {
+      throw new ImATeapotException('Get the fuck outta here');
+    }
 
     const price = crypto.value * offer.amount;
     if (buyer.dollarAvailables < price) {
@@ -163,6 +179,18 @@ export class TradeService {
         dollarAvailables: prevAmount - price,
       },
     });
+
+    const newBalanceSeller = seller.dollarAvailables + price;
+
+    await this.prisma.user.update({
+      where: {
+        id: seller.id,
+      },
+      data: {
+        dollarAvailables: newBalanceSeller,
+      },
+    });
+
     await this.prisma.offer.delete({
       where: {
         id: offer.id,

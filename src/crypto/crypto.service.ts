@@ -36,9 +36,9 @@ export class CryptoService {
     await checkUserHasAccount(userId);
 
     if (cryptoId) {
-      return this.prisma.crypto.findMany({
+      return this.prisma.cryptoHistory.findMany({
         where: {
-          id: cryptoId,
+          id_crypto: cryptoId,
         },
 
         orderBy: {
@@ -48,6 +48,87 @@ export class CryptoService {
       });
     } else {
       throw new ForbiddenException('Crypto UUID required');
+    }
+  }
+
+  async sellCryto(userId: string, dto: BuyCryptoDto) {
+    await checkUserHasAccount(userId);
+
+    const crypto = await this.prisma.crypto.findFirst({
+      where: {
+        id: dto.id_crypto,
+      },
+    });
+
+    const user = await this.prisma.user.findFirst({
+      where: { id: userId },
+    });
+
+    if (!crypto || !crypto.id) {
+      throw new ForbiddenException('Crypto doesnt exist');
+    }
+
+    const userAsset = await this.prisma.userHasCrypto.findFirst({
+      where: {
+        id_user: userId,
+        id_crypto: dto.id_crypto,
+      },
+    });
+    const newCryptoValue = crypto.value * 0.9;
+    if (!userAsset || userAsset.amount < dto.amount) {
+      throw new ForbiddenException(`Seller dont have enough asset`);
+    } else {
+      await this.prisma.crypto.update({
+        where: {
+          id: crypto.id,
+        },
+        data: {
+          value: newCryptoValue,
+        },
+      });
+
+      const price = crypto.value * dto.amount;
+      const newBalanceSeller = user.dollarAvailables + price;
+
+      await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          dollarAvailables: newBalanceSeller,
+        },
+      });
+      await this.prisma.cryptoHistory.create({
+        data: {
+          id_crypto: crypto.id,
+          value: newCryptoValue,
+        },
+      });
+      const newBalance = userAsset.amount - dto.amount;
+      await this.prisma.crypto.update({
+        where: {
+          id: dto.id_crypto,
+        },
+        data: {
+          quantity: crypto.quantity + dto.amount,
+        },
+      });
+      if (newBalance > 0) {
+        return this.prisma.userHasCrypto.update({
+          where: {
+            id: userAsset.id,
+          },
+          data: {
+            amount: newBalance,
+          },
+        });
+      } else {
+        return this.prisma.userHasCrypto.delete({
+          where: {
+            id: userAsset.id,
+          },
+        });
+      }
     }
   }
 
@@ -151,6 +232,7 @@ export class CryptoService {
       },
     });
   }
+
   async editCryptoById(userId: string, cryptoId: string, dto: CryptoDto) {
     await checkuserIsAdmin(userId);
 

@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  ImATeapotException,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { checkUserHasAccount, checkuserIsAdmin } from 'src/utils/checkUser';
 import { OfferDto } from './dto';
@@ -13,6 +17,36 @@ export class OfferService {
         created_at: 'desc',
       },
       select: {
+        id: true,
+        User: {
+          select: {
+            pseudo: true,
+          },
+        },
+        amount: true,
+        created_at: true,
+        id_user: true,
+        Crypto: true,
+      },
+    });
+  }
+
+  async getOffersByCrypto(userId: string, cryptoId: string) {
+    await checkUserHasAccount(userId);
+    return this.prisma.offer.findMany({
+      where: {
+        id_crypto: cryptoId,
+      },
+      orderBy: {
+        amount: 'desc',
+      },
+      select: {
+        id: true,
+        User: {
+          select: {
+            pseudo: true,
+          },
+        },
         amount: true,
         created_at: true,
         id_user: true,
@@ -23,6 +57,40 @@ export class OfferService {
 
   async createOffer(userId: string, dto: OfferDto) {
     await checkUserHasAccount(userId);
+
+    const userAssets = await this.prisma.userHasCrypto.findFirst({
+      where: {
+        id_user: userId,
+        Crypto: {
+          id: dto.id_crypto,
+        },
+      },
+    });
+
+    if (!userAssets) {
+      throw new ForbiddenException('No tokens available');
+    }
+
+    if (userAssets.amount < dto.amount) {
+      throw new ForbiddenException('Insuficient tokens avaiblable');
+    }
+
+    const currentUserOffers = await this.prisma.offer.findMany({
+      where: {
+        id_user: userId,
+        id_crypto: dto.id_crypto,
+      },
+    });
+    let totalAmountsInOffers = 0;
+    currentUserOffers.forEach((offer) => {
+      totalAmountsInOffers += offer.amount;
+    });
+    console.log(totalAmountsInOffers);
+
+    if (totalAmountsInOffers >= userAssets.amount) {
+      throw new ImATeapotException('Insuficient tokens avaiblable');
+    }
+
     const offer = await this.prisma.offer.create({
       data: {
         id_crypto: dto.id_crypto,
