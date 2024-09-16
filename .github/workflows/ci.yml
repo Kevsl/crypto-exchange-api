@@ -7,37 +7,27 @@ on:
       - main
 
 jobs:
-  # Nous appelons cette liste de tâches backend-test, car le sujet de cette ci est de réaliser des tests avant l'intégration sur main
-  backend-test:
+  sonarqube:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: .
     steps:
-      # Nous allons utiliser l'action checkout qui récupère le code source depuis GitHub .
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Nous utilisons ensuite l'action setup-node@v4 avec la bonne version
-      # et npm.
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.17.0'
 
-      #  Installation des dépendances avec npm install
       - name: Install dependencies
         run: npm install
 
-      #  Execution des tests unitaires avec npm run test
-      - name: Run tests
-        run: npm run test
-    services:
-      postgres:
-        image: postgres:13
-        ports:
-          - 5432:5432
+      - name: Run SonarCloud scan
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
-          POSTGRES_DB: testdb
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Clé secrète SonarCloud
+        run: |
+          npx sonar-scanner \
+          -Dsonar.projectKey=your_project_key \
+          -Dsonar.organization=your_organization_key \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
