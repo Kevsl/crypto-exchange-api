@@ -86,7 +86,7 @@ model User {
   hash             String
   email            String @unique
   roleId           String
-  isActive         Boolean
+  isActive         Boolean 
   city             String
   dollarAvailables Float
   age              Int @default(20)
